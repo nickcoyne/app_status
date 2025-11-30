@@ -1,4 +1,6 @@
 AppStatus::Engine.routes.draw do
-  get '/index(.:format)', to: 'status#index'
-  root to: 'status#index'
+  defaults format: :json do
+    get '/index', to: 'status#index'
+    root to: 'status#index'
+  end
 end
