@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 5.0"
 
   s.add_development_dependency "rake", "~> 12.0"
-  s.add_development_dependency "rspec", "~> 3.8.0"
-  s.add_development_dependency "rspec-rails", "~> 3.8.0"
+  s.add_development_dependency "rspec", "~> 3.13.0"
+  s.add_development_dependency "rspec-rails", "~> 7.0"
   s.add_development_dependency "timecop", "~> 0.9.1"
   s.add_development_dependency "capybara", "~> 2.14"
 end

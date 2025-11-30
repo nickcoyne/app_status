@@ -26,7 +26,7 @@ module AppStatus
       # @param [String] expected_version which ruby version is expected?
       #   if nil, value will be read from .ruby-version file
       def self.check(expected_version: nil)
-        expected_version ||= File.read(Rails.root.join('.ruby-version')).strip
+        expected_version ||= File.read(Rails.root.join('.ruby-version').to_s).strip
         status = RUBY_VERSION == expected_version ? :ok : :critical
         [status, "expected: #{expected_version}, actual: #{RUBY_VERSION}"]
       end
