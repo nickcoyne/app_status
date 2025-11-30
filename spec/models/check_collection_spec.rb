@@ -61,13 +61,13 @@ describe AppStatus::CheckCollection do
 
       c = AppStatus::CheckCollection.new
 
-      Timecop.freeze '2013-10-04T12:00:00Z' do
+      travel_to Time.parse('2013-10-04T12:00:00Z') do
         c.evaluate!
         c.as_json[:finished].should eq '2013-10-04T12:00:00Z'
         c.as_json[:checks][:test][:details].should eq "1"
       end
 
-      Timecop.freeze '2013-10-04T01:00:00Z' do
+      travel_to Time.parse('2013-10-04T01:00:00Z') do
         c.evaluate!
         c.as_json[:finished].should eq '2013-10-04T01:00:00Z'
         c.as_json[:checks][:test][:details].should eq "2"
@@ -143,7 +143,7 @@ describe AppStatus::CheckCollection do
       end
 
       c = AppStatus::CheckCollection.new
-      Timecop.freeze('2013-10-05T12:00:00Z') { c.evaluate! }
+      travel_to(Time.parse('2013-10-05T12:00:00Z')) { c.evaluate! }
 
       expect(c.as_json).to match({
         "status" => :unknown,

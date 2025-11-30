@@ -6,9 +6,8 @@ source "http://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem 'rake', '~> 12.0'
-  gem 'rspec', '~> 3.8.0'
-  gem 'rspec-rails', '~> 3.8.0'
-  gem "timecop", "~> 0.9.1"
-  gem "capybara", "~> 2.14"
+  gem 'rake', '~> 13.3'
+  gem 'rspec', '~> 3.13.2'
+  gem 'rspec-rails', '~> 8.0'
+  gem "capybara", "~> 3.40"
 end

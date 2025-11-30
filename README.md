@@ -12,12 +12,12 @@ data in a way easily consumed by Nagios or other monitoring packages.
 Defining health checks outside of your application (like in Nagios)
 has a few different problems.
 
-  1. The people who maintain nagios aren't necessarily
-     the same people who maintain the application.
-  1. Keeping the 2 systems in sync can be non-trivial with a fast-changing
-     application.
-  1. Failing to monitor new features, or monitoring the wrong things, leads
-     to a false sense of security.
+1. The people who maintain nagios aren't necessarily
+   the same people who maintain the application.
+1. Keeping the 2 systems in sync can be non-trivial with a fast-changing
+   application.
+1. Failing to monitor new features, or monitoring the wrong things, leads
+   to a false sense of security.
 
 Instead, app_status lets you define your health checks right in the application
 itself and expose the results as a JSON service which is easy for Nagios
@@ -29,18 +29,23 @@ status report.
 
 This is good because:
 
-  1. As your app's feature set changes, you can deploy updated health checks
-     at the same time. No need for coordinated updates between the app and
-     the monitoring system.
-  1. Credentials for external services (like databases) can stay with your
-     app. Nagios doesn't need them.
-  1. You don't need nrpe to do local process checks. Your application can do
-     them for itself.
-  1. Your health checks can be testable methods just like all your other code.
-  1. You don't need to duplicate complex queries & other business logic over
-     to Nagios.
+1. As your app's feature set changes, you can deploy updated health checks
+   at the same time. No need for coordinated updates between the app and
+   the monitoring system.
+1. Credentials for external services (like databases) can stay with your
+   app. Nagios doesn't need them.
+1. You don't need nrpe to do local process checks. Your application can do
+   them for itself.
+1. Your health checks can be testable methods just like all your other code.
+1. You don't need to duplicate complex queries & other business logic over
+   to Nagios.
 
 ## Installation
+
+### Requirements
+
+- Ruby 3.1+
+- Rails 7.2+
 
 ### `Gemfile`
 
@@ -90,10 +95,11 @@ readable output, and Nagios does its best to make this impossible to actually
 do well.
 
 Valid status values (in ascending order of seriousness) are:
-  - :ok
-  - :warning
-  - :critical
-  - :unknown
+
+- :ok
+- :warning
+- :critical
+- :unknown
 
 These are set up to be compatible with Nagios.
 
@@ -154,7 +160,7 @@ also supported.
 ```ruby
 # config/initializers/app_status.rb
 require 'app_status/checks/ruby_version'
-AppStatus::Checks::RubyVersion.install!(expected_version: '2.5.0')
+AppStatus::Checks::RubyVersion.install!(expected_version: '3.3.0')
 ```
 
 ## Usage
@@ -162,6 +168,7 @@ AppStatus::Checks::RubyVersion.install!(expected_version: '2.5.0')
 `$ curl -H 'Accept: application/json' http://localhost:3000/status`
 
 Output will look something like this:
+
 ```json
 {
   "status": "critical",
@@ -192,7 +199,7 @@ The overall status will be the worst value observed in your individual checks.
 [check_app_status.rb](check_app_status.rb)
 is a Nagios check script which can be used to monitor the output from `app_status`
 
-```
+```bash
 $ ./check_app_status.rb --help
 Nagios check script for app_status. See https://github.com/alexdean/app_status
     -v, --verbose                    Output more information
@@ -209,7 +216,7 @@ server. Individual detail items will be grouped by status for display.
 
 Sample output
 
-```
+```bash
 $ ./check_app_status.rb --url http://localhost:3000/status
 
 CRIT failed_service

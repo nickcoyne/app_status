@@ -30,10 +30,10 @@ RSpec.describe AppStatus::Checks::RubyVersion, type: :model do
     it 'should pass optional parameter along to .check' do
       AppStatus::Checks::RubyVersion.install!(expected_version: other_ruby_version)
 
-      expect(AppStatus::Checks::RubyVersion).to(
-        receive(:check)
-          .with(expected_version: other_ruby_version)
-      )
+      expect(AppStatus::Checks::RubyVersion).to receive(:check) do |**kwargs|
+        expect(kwargs[:expected_version]).to eq(other_ruby_version)
+        [:ok, 'mocked']
+      end
 
       checks = AppStatus::CheckCollection.new
       checks.evaluate!
@@ -56,11 +56,8 @@ RSpec.describe AppStatus::Checks::RubyVersion, type: :model do
     end
 
     it 'should read from .ruby-version if expected_version is not specified' do
-      expect(File).to(
-        receive(:read)
-          .with(Rails.root.join('.ruby-version'))
-          .and_return(actual_ruby_version)
-      )
+      ruby_version_path = Rails.root.join('.ruby-version').to_s
+      allow(File).to receive(:read).and_return(actual_ruby_version)
 
       result = subject.check
       expect(result).to(

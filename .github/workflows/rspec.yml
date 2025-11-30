@@ -8,39 +8,35 @@
 name: rspec
 
 on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    branches: '**'
+    branches: [master, main]
 
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['2.5', '2.6', '2.7', '3.0', '3.1']
-        gemfile: ['gemfiles/rails-5-2.gemfile', 'gemfiles/rails-6-0.gemfile', 'gemfiles/rails-6-1.gemfile', 'gemfiles/rails-7-0.gemfile']
-        exclude:
-          # rails 5.2 doesnt work with ruby 3
-          - gemfile: 'gemfiles/rails-5-2.gemfile'
-            ruby: '3.0'
-          - gemfile: 'gemfiles/rails-5-2.gemfile'
-            ruby: '3.1'
-          # rails 7 requires at least ruby 2.7
-          - gemfile: 'gemfiles/rails-7-0.gemfile'
-            ruby: '2.5'
-          - gemfile: 'gemfiles/rails-7-0.gemfile'
-            ruby: '2.6'
+        include:
+          - ruby: "3.1"
+            gemfile: "gemfiles/rails-7-2.gemfile"
+          - ruby: "3.3"
+            gemfile: "gemfiles/rails-8-0.gemfile"
+          - ruby: "3.4"
+            gemfile: "gemfiles/rails-8-1.gemfile"
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-    - name: Install dependencies
-      run: bundle install --gemfile=${{ matrix.gemfile }}
-    - name: Run tests
-      run: bundle exec --gemfile=${{ matrix.gemfile }} rake spec
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install --gemfile=${{ matrix.gemfile }}
+      - name: Run tests
+        run: bundle exec --gemfile=${{ matrix.gemfile }} rake spec
